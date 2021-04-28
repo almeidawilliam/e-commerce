@@ -1,9 +1,8 @@
 package br.com.zupacademy.william.ecommerce.produto.caracteristica;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import br.com.zupacademy.william.ecommerce.produto.Produto;
+
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
@@ -15,6 +14,10 @@ public class ProdutoCaracteristica {
 
     private String nome;
     private String descricao;
+
+    @ManyToOne
+    @JoinColumn(name = "id_produto")
+    private Produto produto;
 
     public ProdutoCaracteristica(String nome, String descricao) {
         this.nome = nome;

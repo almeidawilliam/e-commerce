@@ -2,6 +2,7 @@ package br.com.zupacademy.william.ecommerce.produto;
 
 import br.com.zupacademy.william.ecommerce.categoria.Categoria;
 import br.com.zupacademy.william.ecommerce.produto.caracteristica.ProdutoCaracteristica;
+import br.com.zupacademy.william.ecommerce.produto.imagem.ProdutoImagem;
 import br.com.zupacademy.william.ecommerce.usuario.Usuario;
 import io.jsonwebtoken.lang.Assert;
 import org.hibernate.annotations.CreationTimestamp;
@@ -9,7 +10,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 public class Produto {
@@ -23,7 +26,7 @@ public class Produto {
     private int quantidadeDisponivel;
     private String descricao;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "produto")
     private Set<ProdutoCaracteristica> caracteristicas;
 
     @ManyToOne
@@ -37,6 +40,9 @@ public class Produto {
     @CreationTimestamp
     private LocalDateTime instanteCriacao = LocalDateTime.now();
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "produto")
+    private Set<ProdutoImagem> imagens;
+
     public Produto(String nome, BigDecimal valor, int quantidadeDisponivel, String descricao,
                    Set<ProdutoCaracteristica> caracteristicas, Categoria categoria, Usuario donoDoProduto) {
         this.nome = nome;
@@ -48,5 +54,28 @@ public class Produto {
         this.donoDoProduto = donoDoProduto;
 
         Assert.isTrue(this.caracteristicas.size() >= 3, "É necessário ao menos 3 características para um produto");
+    }
+
+    @Deprecated
+    public Produto() {
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Produto produto = (Produto) o;
+        return Objects.equals(id, produto.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, nome, valor, quantidadeDisponivel, descricao, caracteristicas, categoria, donoDoProduto, instanteCriacao, imagens);
+    }
+
+    public void associarImagens(Set<String> links) {
+        this.imagens.addAll(links.stream()
+                .map(link -> new ProdutoImagem(this, link))
+                .collect(Collectors.toSet()));
     }
 }

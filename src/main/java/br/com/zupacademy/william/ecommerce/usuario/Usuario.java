@@ -1,14 +1,13 @@
 package br.com.zupacademy.william.ecommerce.usuario;
 
+import br.com.zupacademy.william.ecommerce.produto.Produto;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Entity
 public class Usuario implements UserDetails {
@@ -21,10 +20,13 @@ public class Usuario implements UserDetails {
     private String senha;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private List<Perfil> perfis = new ArrayList<>();
+    private Set<Perfil> perfis = new HashSet<>();
 
     @CreationTimestamp
     private LocalDateTime instanteCadastro = LocalDateTime.now();
+
+    @OneToMany(mappedBy = "donoDoProduto", fetch = FetchType.EAGER)
+    private List<Produto> produtos;
 
     public Usuario(String login, SenhaLimpa senhaLimpa) {
         this.login = login;
@@ -33,6 +35,10 @@ public class Usuario implements UserDetails {
 
     @Deprecated
     public Usuario() {
+    }
+
+    public boolean eDonoDoProduto(Produto produto) {
+        return this.produtos.contains(produto);
     }
 
     public Long getId() {
