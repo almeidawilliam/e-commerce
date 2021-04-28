@@ -10,7 +10,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/usuarios")
-public class UsuarioCadastroController {
+public class UsuarioController {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
