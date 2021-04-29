@@ -34,6 +34,7 @@ public class ProdutoInputDto {
     @Length(max = 1000)
     private String descricao;
 
+    @NotNull
     @Size(min = 3, max = 100)
     @Valid
     private List<ProdutoCaracteristicaInputDto> caracteristicas;

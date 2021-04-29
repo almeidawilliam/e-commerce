@@ -78,4 +78,12 @@ public class Produto {
                 .map(link -> new ProdutoImagem(this, link))
                 .collect(Collectors.toSet()));
     }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getEmailDoDonoDoProduto() {
+        return this.donoDoProduto.getEmail();
+    }
 }
