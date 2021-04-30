@@ -121,4 +121,12 @@ public class Produto {
     public Set<ProdutoAvaliacao> getAvaliacoes() {
         return avaliacoes;
     }
+
+    public boolean possuiQuantidadeEmEstoque(Long quantidade) {
+        return this.quantidadeDisponivel >= quantidade;
+    }
+
+    public void abateDoEstoque(Long quantidade) {
+        this.quantidadeDisponivel -= quantidade;
+    }
 }
