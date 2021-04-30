@@ -12,6 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.Objects;
 import java.util.Optional;
@@ -30,6 +31,7 @@ public class ProdutoPerguntaController {
     private ApplicationEventPublisher publisher;
 
     @PostMapping
+    @Transactional
     public ResponseEntity criar(@AuthenticationPrincipal Usuario usuarioLogado,
                                 @PathVariable Long id,
                                 @RequestBody @Valid ProdutoPerguntaRequestDto produtoPerguntaRequestDto) {

@@ -1,8 +1,9 @@
 package br.com.zupacademy.william.ecommerce.produto.caracteristica;
 
-import br.com.zupacademy.william.ecommerce.produto.Produto;
-
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Objects;
 
 @Entity
@@ -15,13 +16,15 @@ public class ProdutoCaracteristica {
     private String nome;
     private String descricao;
 
-    @ManyToOne
-    @JoinColumn(name = "id_produto")
-    private Produto produto;
+    private Long idProduto;
 
     public ProdutoCaracteristica(String nome, String descricao) {
         this.nome = nome;
         this.descricao = descricao;
+    }
+
+    @Deprecated
+    public ProdutoCaracteristica() {
     }
 
     @Override
@@ -35,5 +38,13 @@ public class ProdutoCaracteristica {
     @Override
     public int hashCode() {
         return Objects.hash(nome);
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getDescricao() {
+        return descricao;
     }
 }

@@ -11,7 +11,6 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -53,20 +52,18 @@ public class ProdutoInputDto {
     }
 
     public Produto toModel(Categoria categoriaDoProduto, Usuario donoDoProduto) {
-        Set<ProdutoCaracteristica> crodutoCaracteristicas = new HashSet<>();
+        Set<ProdutoCaracteristica> produtoCaracteristicas;
 
-        if (!this.caracteristicas.isEmpty()) {
-            crodutoCaracteristicas.addAll(this.caracteristicas.stream()
-                    .map(ProdutoCaracteristicaInputDto::toModel)
-                    .collect(Collectors.toList()));
-        }
+        produtoCaracteristicas = this.caracteristicas.stream()
+                .map(ProdutoCaracteristicaInputDto::toModel)
+                .collect(Collectors.toSet());
 
         return new Produto(
                 this.nome,
                 this.valor,
                 this.quantidadeDisponivel,
                 this.descricao,
-                crodutoCaracteristicas,
+                produtoCaracteristicas,
                 categoriaDoProduto,
                 donoDoProduto);
     }

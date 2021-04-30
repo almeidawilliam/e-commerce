@@ -29,4 +29,24 @@ public class ProdutoAvaliacao {
         this.produto = produto;
         this.usuario = usuario;
     }
+
+    @Deprecated
+    public ProdutoAvaliacao() {
+    }
+
+    public int getNota() {
+        return nota;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public String getEmailAvaliador() {
+        return this.usuario.getEmail();
+    }
 }

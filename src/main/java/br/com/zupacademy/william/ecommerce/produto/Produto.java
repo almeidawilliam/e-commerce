@@ -1,8 +1,10 @@
 package br.com.zupacademy.william.ecommerce.produto;
 
 import br.com.zupacademy.william.ecommerce.categoria.Categoria;
+import br.com.zupacademy.william.ecommerce.produto.avaliacao.ProdutoAvaliacao;
 import br.com.zupacademy.william.ecommerce.produto.caracteristica.ProdutoCaracteristica;
 import br.com.zupacademy.william.ecommerce.produto.imagem.ProdutoImagem;
+import br.com.zupacademy.william.ecommerce.produto.pergunta.ProdutoPergunta;
 import br.com.zupacademy.william.ecommerce.usuario.Usuario;
 import io.jsonwebtoken.lang.Assert;
 import org.hibernate.annotations.CreationTimestamp;
@@ -26,7 +28,8 @@ public class Produto {
     private int quantidadeDisponivel;
     private String descricao;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "produto")
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "idProduto")
     private Set<ProdutoCaracteristica> caracteristicas;
 
     @ManyToOne
@@ -42,6 +45,12 @@ public class Produto {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "produto")
     private Set<ProdutoImagem> imagens;
+
+    @OneToMany(mappedBy = "produto")
+    private Set<ProdutoPergunta> perguntas;
+
+    @OneToMany(mappedBy = "produto")
+    private Set<ProdutoAvaliacao> avaliacoes;
 
     public Produto(String nome, BigDecimal valor, int quantidadeDisponivel, String descricao,
                    Set<ProdutoCaracteristica> caracteristicas, Categoria categoria, Usuario donoDoProduto) {
@@ -83,7 +92,33 @@ public class Produto {
         return nome;
     }
 
+    public BigDecimal getValor() {
+        return valor;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public Set<ProdutoCaracteristica> getCaracteristicas() {
+        return caracteristicas;
+    }
+
+    public Set<String> getLinksImagens() {
+        return imagens.stream()
+                .map(ProdutoImagem::getLink)
+                .collect(Collectors.toSet());
+    }
+
+    public Set<ProdutoPergunta> getPerguntas() {
+        return perguntas;
+    }
+
     public String getEmailDoDonoDoProduto() {
         return this.donoDoProduto.getEmail();
+    }
+
+    public Set<ProdutoAvaliacao> getAvaliacoes() {
+        return avaliacoes;
     }
 }

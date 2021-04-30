@@ -11,8 +11,8 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/produtos")
@@ -30,15 +30,13 @@ public class ProdutoController {
     }
 
     @PostMapping
+    @Transactional
     public ResponseEntity criar(@RequestBody @Valid ProdutoInputDto produtoInputDto,
                                 @AuthenticationPrincipal Usuario usuarioLogado) {
-        Optional<Categoria> possivelCategoria = categoriaRepository.findById(produtoInputDto.getIdCategoria());
+        Categoria categoria = categoriaRepository.findById(produtoInputDto.getIdCategoria())
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Não existe uma categoria com id %d", produtoInputDto.getIdCategoria())));
 
-        if (possivelCategoria.isEmpty()) {
-            throw new EntityNotFoundException(String.format("Não existe uma categoria com id %d", produtoInputDto.getIdCategoria()));
-        }
-
-        Produto novoProduto = produtoInputDto.toModel(possivelCategoria.get(), usuarioLogado);
+        Produto novoProduto = produtoInputDto.toModel(categoria, usuarioLogado);
         produtoRepository.save(novoProduto);
         return ResponseEntity.ok().build();
     }

@@ -26,4 +26,8 @@ public class ProdutoImagem {
     public ProdutoImagem() {
 
     }
+
+    public String getLink() {
+        return link;
+    }
 }

@@ -32,6 +32,10 @@ public class ProdutoPergunta {
         this.usuario = usuario;
     }
 
+    @Deprecated
+    public ProdutoPergunta() {
+    }
+
     public String getTitulo() {
         return titulo;
     }
