@@ -10,8 +10,9 @@ public class EnviaEmailFakeListener {
     @Async
     @EventListener
     public void enviaEmail(Email email) {
-        System.out.println("Pergunta: " + email.getTitulo());
+        System.out.println("Corpo do Email: " + email.getTitulo());
         System.out.println("De: " + email.getRemetente());
         System.out.println("Para: " + email.getDestinatario());
+        System.out.println("---------------------------------------------------------------------------------");
     }
 }

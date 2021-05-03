@@ -114,6 +114,10 @@ public class Produto {
         return perguntas;
     }
 
+    public Usuario getDonoDoProduto() {
+        return this.donoDoProduto;
+    }
+
     public String getEmailDoDonoDoProduto() {
         return this.donoDoProduto.getEmail();
     }

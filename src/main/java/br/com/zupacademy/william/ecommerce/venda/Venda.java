@@ -1,11 +1,13 @@
 package br.com.zupacademy.william.ecommerce.venda;
 
+import br.com.zupacademy.william.ecommerce.pagamento.Pagamento;
 import br.com.zupacademy.william.ecommerce.produto.Produto;
 import br.com.zupacademy.william.ecommerce.usuario.Usuario;
 import br.com.zupacademy.william.ecommerce.venda.gateway.GatewayPagamento;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Set;
 
 @Entity
 public class Venda {
@@ -37,12 +39,19 @@ public class Venda {
 
     private BigDecimal valor;
 
+    @OneToMany(mappedBy = "venda", cascade = CascadeType.ALL)
+    private Set<Pagamento> pagamentos;
+
     public Venda(GatewayPagamento gatewayPagamento, Produto produto, int quantidade, Usuario comprador) {
         this.gatewayPagamento = gatewayPagamento;
         this.produto = produto;
         this.quantidade = quantidade;
         this.comprador = comprador;
         this.valor = produto.getValor().multiply(BigDecimal.valueOf(quantidade));
+    }
+
+    @Deprecated
+    public Venda() {
     }
 
     public StatusVenda getStatusVenda() {
@@ -61,6 +70,10 @@ public class Venda {
         return comprador;
     }
 
+    public Usuario getVendedor() {
+        return this.produto.getDonoDoProduto();
+    }
+
     public BigDecimal getValor() {
         return valor;
     }
@@ -75,5 +88,17 @@ public class Venda {
 
     public String getUrlDeRetorno() {
         return this.gatewayPagamento.getUrlRetorno(this.id);
+    }
+
+    public void adicionarTentativaPagamento(Pagamento novoPagamento) {
+        this.pagamentos.add(novoPagamento);
+
+        if (novoPagamento.sucessoNoPagamento()) {
+            this.statusVenda = StatusVenda.FINALIZADA;
+        }
+    }
+
+    public boolean taPaga() {
+        return this.statusVenda.equals(StatusVenda.FINALIZADA);
     }
 }
